@@ -4,7 +4,7 @@
 
 class Model {
   constructor() {
-    this.contacts = [];
+    this.contacts;
     this.getAllContacts();
   }
 
@@ -15,13 +15,14 @@ class Model {
       })
       .then((data) => {
         this.contacts = data;
-        return;
       })
       .catch((error) => {
+        console.log('Error! Something went wrong...');
         console.error(error);
       });
   }
 }
+
 
 class View {
   constructor() {}
