@@ -18,7 +18,7 @@ class Model {
       this.contacts = json;
       return json;
     } catch (error) {
-      console.log('Error! Something went wrong...');
+      console.log('Error, details below.');
       console.error(error);
     }
   }
@@ -39,7 +39,7 @@ class Model {
         console.log(response.status);
       }
     } catch (error) {
-      console.log('Error! Something went wrong...');
+      console.log('Error, details below.');
       console.error(error);
     }
   }
@@ -57,7 +57,7 @@ class Model {
         console.log(response.status);
       }
     } catch (error) {
-      console.log('Error! Something went wrong...');
+      console.log('Error, details below.');
       console.error(error);
     }
   }
@@ -72,13 +72,13 @@ class Model {
         console.log('Contact retrieved');
         this.selectedContact = json;
         console.log(this.selectedContact);
-        console.log(json);
+        return json;
       } else {
         console.log(response.status);
         console.log('Contact not found');
       }
     } catch (error) {
-      console.log('Error! Something went wrong...');
+      console.log('Error, details below.');
       console.error(error);
     }
   }
@@ -101,7 +101,7 @@ class Model {
         console.log('Contact not found');
       }
     } catch (error) {
-      console.log('Error! Something went wrong...');
+      console.log('Error, details below.');
       console.error(error);
     }
   }

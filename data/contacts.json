@@ -19,5 +19,12 @@
     "email": "ph@example.com",
     "phone_number": "54321098761",
     "tags": null
+  },
+  {
+    "full_name": "Charles Hartman",
+    "phone_number": "503-222-1212",
+    "email": "charles@hartman.dev",
+    "tags": "work,cycling",
+    "id": 4
   }
 ]
