@@ -10,5 +10,10 @@
         "sourceType": "module"
     },
     "rules": {
+        "indent": ["error", 2, { "SwitchCase": 1 }],
+        "no-trailing-spaces": "error",
+        "semi": ["error", "always", { "omitLastInOneLineBlock": true}],
+        "semi-spacing": "error",
+        "semi-style": "error"
     }
 }
