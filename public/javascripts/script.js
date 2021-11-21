@@ -6,7 +6,7 @@ class Model {
   constructor() {
     this.contacts = [];
     this.selectedContact;
-    this.getAllContacts();
+    // this.getAllContacts();
   }
 
   async getAllContacts() {
@@ -131,7 +131,8 @@ class View {
     this.contactList = this.createElement('ul', 'contactList');
 
     // add or edit form
-    this.form = this.createElement('form');
+    this.form = this.createElement('form', 'createEditForm');
+    this.form.style.display = 'none';
 
     this.labelName = this.createElement('label');
     this.labelName.setAttribute('for', 'name');
@@ -173,6 +174,46 @@ class View {
 
     this.app.append(this.title, this.search, this.upperAddContactButton,
       this.contactList, this.form);
+
+    // Add event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      this.upperAddContactButton.addEventListener('click', event => {
+        event.preventDefault();
+        this.form.style.display = 'block';
+      });
+
+      this.cancelButton.addEventListener('click', event => {
+        event.preventDefault();
+        this.form.style.display = 'none';
+      });
+
+      this.contactList.addEventListener('click', event => {
+        event.preventDefault();
+        console.log(`${event.target.tagName} | ${event.target.name} | ${event.target.parentElement.id}`);
+      });
+      // more event listeners to add
+    });
+
+    this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
+    // eslint-disable-next-line no-undef
+    this.contactTemplateFunc = Handlebars.compile(this.contactTemplate);
+  }
+
+  displayContacts(contacts) {
+    if (contacts.length > 0) {
+      contacts.forEach(contact => {
+        let li = this.createElement('li');
+        li.innerHTML = this.contactTemplateFunc(contact);
+        this.contactList.appendChild(li);
+      });
+    } else {
+      console.log('No contacts, add some.');
+      let li = this.createElement('li');
+      li.textContent = 'There are currently no contacts. Add some!';
+      this.contactList.appendChild(li);
+    }
+
+    console.log(contacts);
   }
 
   // Create element with optional class
@@ -197,6 +238,17 @@ class Controller {
   constructor(model = new Model(), view = new View()) {
     this.model = model;
     this.view = view;
+
+    this.initializeContactList();
+  }
+
+  async initializeContactList() {
+    await this.model.getAllContacts();
+    this.onContactListChanged(this.model.contacts);
+  }
+
+  onContactListChanged(contacts) {
+    this.view.displayContacts(contacts);
   }
 }
 
