@@ -189,14 +189,18 @@ class View {
 
       this.contactList.addEventListener('click', event => {
         event.preventDefault();
-        console.log(`${event.target.tagName} | ${event.target.name} | ${event.target.parentElement.id}`);
+        let target = event.target;
+        if (target.tagName !== 'BUTTON') {
+          return;
+        } else {
+          console.log(`${target.name} | ${target.parentElement.id}`);
+        }
       });
       // more event listeners to add
     });
 
     this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
-    // eslint-disable-next-line no-undef
-    this.contactTemplateFunc = Handlebars.compile(this.contactTemplate);
+    this.contactTemplateFunc = window.Handlebars.compile(this.contactTemplate);
   }
 
   displayContacts(contacts) {
