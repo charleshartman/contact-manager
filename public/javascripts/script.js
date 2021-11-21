@@ -52,14 +52,15 @@ class Model {
       await response.text();
       if (response.ok) {
         console.log('Contact deleted');
-        this.getAllContacts();
+        await this.getAllContacts();
+        this._commit(this.contacts);
       } else {
         console.log(response.status);
       }
     } catch (error) {
       console.log('Error, details below.');
       console.error(error);
-    }
+    }  
   }
 
   async getContact(id) {
@@ -104,6 +105,14 @@ class Model {
       console.log('Error, details below.');
       console.error(error);
     }
+  }
+
+  bindContactListChanged(callback) {
+    this.onContactListChanged = callback;
+  }
+
+  _commit(contacts) {
+    this.onContactListChanged(contacts);
   }
 }
 
@@ -204,6 +213,12 @@ class View {
   }
 
   displayContacts(contacts) {
+    // Delete all nodes
+    while (this.contactList.firstChild) {
+      this.contactList.removeChild(this.contactList.firstChild);
+    }
+
+    // Show empty list message OR display the CURRENT list
     if (contacts.length > 0) {
       contacts.forEach(contact => {
         let li = this.createElement('li');
@@ -217,7 +232,7 @@ class View {
       this.contactList.appendChild(li);
     }
 
-    console.log(contacts);
+    // console.log(contacts);
   }
 
   // Toggle form and contact visibility
@@ -242,6 +257,16 @@ class View {
 
     return element;
   }
+
+  bindDeleteContact(handler) {
+    this.contactList.addEventListener('click', event => {
+      if (event.target.className === 'delete') {
+        const id = parseInt(event.target.parentElement.id, 10);
+
+        handler(id);
+      }
+    });
+  }
 }
 
 class Controller {
@@ -249,16 +274,25 @@ class Controller {
     this.model = model;
     this.view = view;
 
-    this.initializeContactList();
+    // explicit bindings
+    this.model.bindContactListChanged(this.onContactListChanged);
+    this.view.bindDeleteContact(this.handleDeleteContact);
+
+    // initialize list and send to the View
+    this.retrieveContactList();
   }
 
-  async initializeContactList() {
+  async retrieveContactList() {
     await this.model.getAllContacts();
     this.onContactListChanged(this.model.contacts);
   }
 
-  onContactListChanged(contacts) {
+  onContactListChanged = (contacts) => {
     this.view.displayContacts(contacts);
+  }
+
+  handleDeleteContact = (id) => {
+    this.model.deleteContact(id);
   }
 }
 
