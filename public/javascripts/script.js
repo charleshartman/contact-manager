@@ -60,7 +60,7 @@ class Model {
     } catch (error) {
       console.log('Error, details below.');
       console.error(error);
-    }  
+    }
   }
 
   async getContact(id) {
@@ -261,9 +261,11 @@ class View {
   bindDeleteContact(handler) {
     this.contactList.addEventListener('click', event => {
       if (event.target.className === 'delete') {
-        const id = parseInt(event.target.parentElement.id, 10);
+        if (window.confirm("Do you want to delete the contact?")) {
+          const id = parseInt(event.target.parentElement.id, 10);
 
-        handler(id);
+          handler(id);
+        }
       }
     });
   }
@@ -294,6 +296,7 @@ class Controller {
   handleDeleteContact = (id) => {
     this.model.deleteContact(id);
   }
+
 }
 
 // eslint-disable-next-line no-unused-vars
