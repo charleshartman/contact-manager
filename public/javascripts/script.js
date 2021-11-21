@@ -121,7 +121,7 @@ class View {
     // one field to search full name OR tag name
     this.search = this.createElement('input', 'search');
     this.search.type = 'text';
-    this.search.placeholder = 'Search';
+    this.search.placeholder = 'Search by name or tag';
 
     // add contact button, will show/hide contact form
     this.upperAddContactButton = this.createElement('button');
@@ -132,7 +132,7 @@ class View {
 
     // add or edit form
     this.form = this.createElement('form', 'createEditForm');
-    this.form.style.display = 'none';
+    this.form.classList.add('hide');
 
     this.labelName = this.createElement('label');
     this.labelName.setAttribute('for', 'name');
@@ -179,12 +179,12 @@ class View {
     document.addEventListener('DOMContentLoaded', () => {
       this.upperAddContactButton.addEventListener('click', event => {
         event.preventDefault();
-        this.form.style.display = 'block';
+        this.toggleContactsForm();
       });
 
       this.cancelButton.addEventListener('click', event => {
         event.preventDefault();
-        this.form.style.display = 'none';
+        this.toggleContactsForm();
       });
 
       this.contactList.addEventListener('click', event => {
@@ -218,6 +218,12 @@ class View {
     }
 
     console.log(contacts);
+  }
+
+  // Toggle form and contact visibility
+  toggleContactsForm() {
+    this.form.classList.toggle('hide');
+    this.contactList.classList.toggle('hide');
   }
 
   // Create element with optional class

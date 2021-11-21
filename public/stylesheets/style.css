@@ -1,8 +1,8 @@
-*,
+/* *,
 *::before,
 *::after {
   box-sizing: border-box
-}
+} */
 
 html {
   font-family: sans-serif;
@@ -17,7 +17,7 @@ html {
 }
 
 form {
-  display: flex;
+  display: block;
   margin-bottom: 2rem;
 }
 
@@ -63,7 +63,7 @@ ul {
 }
 
 li {
-  display: flex;
+  display: flow-root;
   align-items: center;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -89,6 +89,18 @@ li span:focus {
   background: rgba(179, 207, 255, 0.52)
 }
 
-dl, dd, dt {
+dl, dt, dd {
   margin: .3rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+.hide {
+  display: none;
 }
