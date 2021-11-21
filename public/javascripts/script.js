@@ -23,18 +23,20 @@ class Model {
     }
   }
 
-  async addAContact(contactObj) {
+  async addAContact(queryString) {
     try {
       const endpointUrl = 'http://localhost:3000/api/contacts/';
       const requestParams =
         { method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(contactObj) };
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: queryString
+        };
       const response = await fetch(endpointUrl, requestParams);
       if (response.ok) {
         console.log(response.json());
         console.log('Contact added successfully');
-        this.getAllContacts();
+        await this.getAllContacts();
+        this._commit(this.contacts);
       } else {
         console.log(response.status);
       }
@@ -147,7 +149,7 @@ class View {
     this.labelName.setAttribute('for', 'name');
     this.labelName.textContent = 'Full name:';
     this.inputName = this.createElement('input');
-    this.inputName.name = 'name';
+    this.inputName.name = 'full_name';
     this.inputName.type = 'text';
 
     this.labelEmail = this.createElement('label');
@@ -161,7 +163,7 @@ class View {
     this.labelPhone.setAttribute('for', 'phone');
     this.labelPhone.textContent = 'Telephone number:';
     this.inputPhone = this.createElement('input');
-    this.inputPhone.name = 'phone';
+    this.inputPhone.name = 'phone_number';
     this.inputPhone.type = 'text';
 
     this.labelTags = this.createElement('label');
@@ -196,16 +198,15 @@ class View {
         this.toggleContactsForm();
       });
 
-      this.contactList.addEventListener('click', event => {
-        event.preventDefault();
-        let target = event.target;
-        if (target.tagName !== 'BUTTON') {
-          return;
-        } else {
-          console.log(`${target.name} | ${target.parentElement.id}`);
-        }
-      });
-      // more event listeners to add
+      // this.contactList.addEventListener('click', event => {
+      //   event.preventDefault();
+      //   let target = event.target;
+      //   if (target.tagName !== 'BUTTON') {
+      //     return;
+      //   } else {
+      //     console.log(`${target.name} | ${target.parentElement.id}`);
+      //   }
+      // });
     });
 
     this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
@@ -258,6 +259,25 @@ class View {
     return element;
   }
 
+  _resetFormInputs() {
+    this.inputName.value = '';
+    this.inputEmail.value = '';
+    this.inputPhone.value = '';
+    this.inputTags.value = '';
+  }
+
+  bindAddContact(handler) {
+    this.form.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const queryString = new URLSearchParams(formData).toString();
+
+      handler(queryString);
+      this._resetFormInputs();
+      this.toggleContactsForm();
+    });
+  }
+
   bindDeleteContact(handler) {
     this.contactList.addEventListener('click', event => {
       if (event.target.className === 'delete') {
@@ -278,6 +298,7 @@ class Controller {
 
     // explicit bindings
     this.model.bindContactListChanged(this.onContactListChanged);
+    this.view.bindAddContact(this.handleAddContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
 
     // initialize list and send to the View
@@ -291,6 +312,10 @@ class Controller {
 
   onContactListChanged = (contacts) => {
     this.view.displayContacts(contacts);
+  }
+
+  handleAddContact = (queryString) => {
+    this.model.addAContact(queryString);
   }
 
   handleDeleteContact = (id) => {

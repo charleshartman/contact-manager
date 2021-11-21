@@ -1,12 +1,5 @@
 [
   {
-    "id": 2,
-    "full_name": "Victor Reyes",
-    "email": "vpr@example.com",
-    "phone_number": "09876543210",
-    "tags": "work,friend"
-  },
-  {
     "id": 3,
     "full_name": "Pete Hanson",
     "email": "ph@example.com",
@@ -19,5 +12,19 @@
     "email": "charles@hartman.dev",
     "tags": "work,cycling",
     "id": 4
+  },
+  {
+    "full_name": "Raul Romero C.",
+    "phone_number": "202-987-3421",
+    "email": "raul@whitehouse.gov",
+    "tags": "work,amongUs",
+    "id": 5
+  },
+  {
+    "full_name": "Mia Jimenez",
+    "phone_number": "245-789-2832",
+    "email": "mia@vt.edu",
+    "tags": "work,amongUS",
+    "id": 6
   }
 ]
