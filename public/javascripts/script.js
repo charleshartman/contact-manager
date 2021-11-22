@@ -197,16 +197,6 @@ class View {
         event.preventDefault();
         this.toggleContactsForm();
       });
-
-      // this.contactList.addEventListener('click', event => {
-      //   event.preventDefault();
-      //   let target = event.target;
-      //   if (target.tagName !== 'BUTTON') {
-      //     return;
-      //   } else {
-      //     console.log(`${target.name} | ${target.parentElement.id}`);
-      //   }
-      // });
     });
 
     this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
@@ -219,7 +209,7 @@ class View {
       this.contactList.removeChild(this.contactList.firstChild);
     }
 
-    // Show empty list message OR display the CURRENT list
+    // Display current list OR display empty list message
     if (contacts.length > 0) {
       contacts.forEach(contact => {
         let li = this.createElement('li');
@@ -289,6 +279,17 @@ class View {
       }
     });
   }
+
+  bindEditContact(handler) {
+    this.contactList.addEventListener('click', event => {
+      if (event.target.className === 'edit') {
+        const id = parseInt(event.target.parentElement.id, 10);
+        console.log(event.target.parentElement);
+
+        handler(id);
+      }
+    });
+  }
 }
 
 class Controller {
@@ -300,6 +301,7 @@ class Controller {
     this.model.bindContactListChanged(this.onContactListChanged);
     this.view.bindAddContact(this.handleAddContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
+    this.view.bindEditContact(this.handleEditContact);
 
     // initialize list and send to the View
     this.retrieveContactList();
@@ -320,6 +322,10 @@ class Controller {
 
   handleDeleteContact = (id) => {
     this.model.deleteContact(id);
+  }
+
+  handleEditContact = (id) => {
+    this.model.getContact(id);
   }
 
 }

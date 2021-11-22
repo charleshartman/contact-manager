@@ -26,5 +26,12 @@
     "email": "mia@vt.edu",
     "tags": "work,amongUS",
     "id": 6
+  },
+  {
+    "full_name": "Tim Cook",
+    "phone_number": "415-623-1123",
+    "email": "tim@apple.com",
+    "tags": "football,danishes",
+    "id": 7
   }
 ]
