@@ -280,10 +280,16 @@ class View {
     });
   }
 
+  // placeholder, currently only retrieves selected contact
   bindEditContact(handler) {
     this.contactList.addEventListener('click', event => {
       if (event.target.className === 'edit') {
         const id = parseInt(event.target.parentElement.id, 10);
+
+        // this.form.classList.add('editMode');
+        // this.populateForm(id);
+        // this.toggleContactsForm();
+
         console.log(event.target.parentElement);
 
         handler(id);
