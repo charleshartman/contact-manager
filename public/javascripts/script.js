@@ -234,28 +234,31 @@ class View {
     this.addContactForm.id = 'addForm';
     this.editContactForm.id = 'editForm';
 
-    // Add event listeners
-    document.addEventListener('DOMContentLoaded', () => {
-      this.addContactButton.addEventListener('click', event => {
-        event.preventDefault();
-        this.toggleAddForm();
-      });
-
-      this.cancelButton.addEventListener('click', event => {
-        event.preventDefault();
-        this.toggleAddForm();
-      });
-
-      this.cancelButton2.addEventListener('click', event => {
-        event.preventDefault();
-        this.toggleEditForm();
-      });
-    });
-
     this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
     this.contactTemplateFunc = window.Handlebars.compile(this.contactTemplate);
 
+    // initialize some general UI listeners
+    this._initLocalListeners();
+
+    // property to hold id set by edit listener, needed by edit submit listener
     this.currentId;
+  }
+
+  _initLocalListeners() {
+    this.addContactButton.addEventListener('click', event => {
+      event.preventDefault();
+      this.toggleAddForm();
+    });
+
+    this.cancelButton.addEventListener('click', event => {
+      event.preventDefault();
+      this.toggleAddForm();
+    });
+
+    this.cancelButton2.addEventListener('click', event => {
+      event.preventDefault();
+      this.toggleEditForm();
+    });
   }
 
   displayContacts(contacts) {
@@ -277,20 +280,22 @@ class View {
       li.textContent = 'There are currently no contacts. Add some!';
       this.contactList.appendChild(li);
     }
-
-    // console.log(contacts);
   }
 
   // Toggle form and contact visibility
   toggleAddForm() {
     this.addContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
+    this.search.classList.toggle('hide');
+    this.addContactButton.classList.toggle('hide');
   }
 
   // Toggle form and contact visibility
   toggleEditForm() {
     this.editContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
+    this.search.classList.toggle('hide');
+    this.addContactButton.classList.toggle('hide');
   }
 
   // Create element with optional class
@@ -410,13 +415,7 @@ class Controller {
   handleEditContact = (id, queryString) => {
     this.model.updateContact(id, queryString);
   }
-
 }
 
 // eslint-disable-next-line no-unused-vars
 const app = new Controller();
-
-/*
-{ full_name: 'Charles Hartman', email: 'charles@hartman.dev', phone_number: '503-222-1212', tags: 'work,cycling' }
-*/
-

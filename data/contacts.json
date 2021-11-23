@@ -10,7 +10,7 @@
     "full_name": "Sophie McGarity",
     "phone_number": "206-309-3222",
     "email": "sophie@petco.com",
-    "tags": "dogs,hamsters,softwareEngineering,wsl",
+    "tags": "dogs,softwareEngineering,wsl",
     "id": 2
   },
   {
@@ -19,5 +19,12 @@
     "email": "tim@apple.com",
     "tags": "money,power,shortHair",
     "id": 3
+  },
+  {
+    "full_name": "Mia Jimenez",
+    "phone_number": "403-532-0088",
+    "email": "mia@duckduckgo.com",
+    "tags": "mindfulness,algorithms",
+    "id": 4
   }
 ]
