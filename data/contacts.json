@@ -1,44 +1,23 @@
 [
   {
-    "id": 3,
-    "full_name": "Pete Hanson",
-    "email": "ph@example.com",
-    "phone_number": "54321098761",
-    "tags": null
-  },
-  {
-    "full_name": "Charles Hartman",
-    "phone_number": "503-222-1212",
-    "email": "charles@hartman.dev",
-    "tags": "work,cycling",
-    "id": 4
-  },
-  {
     "full_name": "Raul Romero C.",
-    "phone_number": "202-987-3421",
-    "email": "raul@whitehouse.gov",
-    "tags": "work,amongUs",
-    "id": 5
+    "phone_number": "614-834-9763",
+    "email": "raul@apple.com",
+    "tags": "vegan,canada,gamer",
+    "id": 1
   },
   {
-    "full_name": "Mia Jimenez",
-    "phone_number": "245-789-2832",
-    "email": "mia@vt.edu",
-    "tags": "work,amongUS",
-    "id": 6
+    "full_name": "Sophie McGarity",
+    "phone_number": "206-309-3222",
+    "email": "sophie@petco.com",
+    "tags": "dogs,hamsters,softwareEngineering,wsl",
+    "id": 2
   },
   {
     "full_name": "Tim Cook",
-    "phone_number": "415-623-1123",
+    "phone_number": "415-555-AAPL",
     "email": "tim@apple.com",
-    "tags": "football,danishes",
-    "id": 7
-  },
-  {
-    "full_name": "Jim Beam",
-    "phone_number": "503-493-0924",
-    "email": "jim@beam.com",
-    "tags": "drinking",
-    "id": 8
+    "tags": "money,power,shortHair",
+    "id": 3
   }
 ]

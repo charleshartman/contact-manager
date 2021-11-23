@@ -5,8 +5,7 @@
 class Model {
   constructor() {
     this.contacts = [];
-    this.selectedContact;
-    // this.getAllContacts();
+    // this.selectedContact;
   }
 
   async getAllContacts() {
@@ -65,40 +64,41 @@ class Model {
     }
   }
 
-  async getContact(id) {
+  // async getContact(id) {
+  //   try {
+  //     const endpointUrl = 'http://localhost:3000/api/contacts/' + String(id);
+  //     const requestParams = { method: 'GET' };
+  //     const response = await fetch(endpointUrl, requestParams);
+  //     if (response.ok) {
+  //       const json = await response.json();
+  //       console.log('Contact retrieved');
+  //       this.selectedContact = json;
+  //       console.log(this.selectedContact);
+  //       return json;
+  //     } else {
+  //       console.log(response.status);
+  //       console.log('Contact not found');
+  //     }
+  //   } catch (error) {
+  //     console.log('Error, details below.');
+  //     console.error(error);
+  //   }
+  // }
+
+  async updateContact(id, queryString) {
     try {
       const endpointUrl = 'http://localhost:3000/api/contacts/' + String(id);
-      const requestParams = { method: 'GET' };
-      const response = await fetch(endpointUrl, requestParams);
-      if (response.ok) {
-        const json = await response.json();
-        console.log('Contact retrieved');
-        this.selectedContact = json;
-        console.log(this.selectedContact);
-        return json;
-      } else {
-        console.log(response.status);
-        console.log('Contact not found');
-      }
-    } catch (error) {
-      console.log('Error, details below.');
-      console.error(error);
-    }
-  }
-
-  async updateContact(contactObj) {
-    try {
-      const endpointUrl = 'http://localhost:3000/api/contacts/' + String(contactObj.id);
       const requestParams =
         { method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(contactObj) };
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: queryString
+        };
       const response = await fetch(endpointUrl, requestParams);
       if (response.ok) {
-        const json = await response.json();
-        console.log(json);
         console.log('Contact updated successfully');
-        this.getAllContacts();
+        await this.getAllContacts();
+        this._commit(this.contacts);
+        return response;
       } else {
         console.log(response.status);
         console.log('Contact not found');
@@ -135,8 +135,8 @@ class View {
     this.search.placeholder = 'Search by name or tag';
 
     // add contact button, will show/hide contact form
-    this.upperAddContactButton = this.createElement('button');
-    this.upperAddContactButton.textContent = 'Add Contact';
+    this.addContactButton = this.createElement('button');
+    this.addContactButton.textContent = 'Add Contact';
 
     // display entire list or filtered list
     this.contactList = this.createElement('ul', 'contactList');
@@ -184,9 +184,51 @@ class View {
       this.labelPhone, this.inputPhone, this.labelTags, this.inputTags,
       this.submitButton, this.cancelButton);
 
-    this.editContactForm = this.addContactForm.cloneNode(true);
+    // edit contact form
+    this.editContactForm = this.createElement('form');
+    this.editContactForm.classList.add('hide');
 
-    this.app.append(this.title, this.search, this.upperAddContactButton,
+    this.labelName2 = this.createElement('label');
+    this.labelName2.setAttribute('for', 'name');
+    this.labelName2.textContent = 'Full name:';
+    this.inputName2 = this.createElement('input');
+    this.inputName2.name = 'full_name';
+    this.inputName2.type = 'text';
+    this.inputName2.setAttribute('required', '');
+
+    this.labelEmail2 = this.createElement('label');
+    this.labelEmail2.setAttribute('for', 'email');
+    this.labelEmail2.textContent = 'Email address:';
+    this.inputEmail2 = this.createElement('input');
+    this.inputEmail2.name = 'email';
+    this.inputEmail2.type = 'text';
+
+    this.labelPhone2 = this.createElement('label');
+    this.labelPhone2.setAttribute('for', 'phone');
+    this.labelPhone2.textContent = 'Telephone number:';
+    this.inputPhone2 = this.createElement('input');
+    this.inputPhone2.name = 'phone_number';
+    this.inputPhone2.type = 'text';
+
+    this.labelTags2 = this.createElement('label');
+    this.labelTags2.setAttribute('for', 'tags');
+    this.labelTags2.textContent = 'Tags:';
+    this.inputTags2 = this.createElement('input');
+    this.inputTags2.name = 'tags';
+    this.inputTags2.type = 'text';
+
+    this.submitButton2 = this.createElement('button');
+    this.submitButton2.textContent = 'Submit';
+
+    this.cancelButton2 = this.createElement('button');
+    this.cancelButton2.textContent = 'Cancel';
+
+    this.editContactForm.append(this.labelName2, this.inputName2, this.labelEmail2, this.inputEmail2,
+      this.labelPhone2, this.inputPhone2, this.labelTags2, this.inputTags2,
+      this.submitButton2, this.cancelButton2);
+
+    // append all the things
+    this.app.append(this.title, this.search, this.addContactButton,
       this.contactList, this.addContactForm, this.editContactForm);
 
     this.addContactForm.id = 'addForm';
@@ -194,19 +236,26 @@ class View {
 
     // Add event listeners
     document.addEventListener('DOMContentLoaded', () => {
-      this.upperAddContactButton.addEventListener('click', event => {
+      this.addContactButton.addEventListener('click', event => {
         event.preventDefault();
-        this.toggleContactsForm();
+        this.toggleAddForm();
       });
 
       this.cancelButton.addEventListener('click', event => {
         event.preventDefault();
-        this.toggleContactsForm();
+        this.toggleAddForm();
+      });
+
+      this.cancelButton2.addEventListener('click', event => {
+        event.preventDefault();
+        this.toggleEditForm();
       });
     });
 
     this.contactTemplate = this.getElement('#contactTemplate').innerHTML;
     this.contactTemplateFunc = window.Handlebars.compile(this.contactTemplate);
+
+    this.currentId;
   }
 
   displayContacts(contacts) {
@@ -233,7 +282,7 @@ class View {
   }
 
   // Toggle form and contact visibility
-  toggleContactsForm() {
+  toggleAddForm() {
     this.addContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
   }
@@ -268,12 +317,12 @@ class View {
     this.inputTags.value = '';
   }
 
-  // _resetEditFormInputs() {
-  //   this.inputName.value = '';
-  //   this.inputEmail.value = '';
-  //   this.inputPhone.value = '';
-  //   this.inputTags.value = '';
-  // }
+  _resetEditFormInputs() {
+    this.inputName2.value = '';
+    this.inputEmail2.value = '';
+    this.inputPhone2.value = '';
+    this.inputTags2.value = '';
+  }
 
   bindAddContact(handler) {
     this.addContactForm.addEventListener('submit', event => {
@@ -283,7 +332,7 @@ class View {
 
       handler(queryString);
       this._resetAddFormInputs();
-      this.toggleContactsForm();
+      this.toggleAddForm();
     });
   }
 
@@ -299,23 +348,29 @@ class View {
     });
   }
 
-  // placeholder, currently only retrieves selected contact
   bindEditContact(handler) {
     this.contactList.addEventListener('click', event => {
       if (event.target.className === 'edit') {
-        const id = parseInt(event.target.parentElement.id, 10);
+        this.currentId = parseInt(event.target.parentElement.id, 10);
 
         const existingName = event.target.parentElement.querySelector('h3');
         const existingContent = event.target.parentElement.querySelectorAll('dd');
-        console.log(existingContent[0].innerText);
-        console.log(existingContent[1].innerText);
-        console.log(existingContent[2].innerText);
+        this.inputName2.value = existingName.innerText;
+        this.inputPhone2.value = existingContent[0].innerText;
+        this.inputEmail2.value = existingContent[1].innerText;
+        this.inputTags2.value = existingContent[2].innerText;
         this.toggleEditForm();
-
-        // console.log(event.target.parentElement.querySelectorAll('dd'));
-
-        handler(id, queryString);
       }
+    });
+
+    this.editContactForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const queryString = new URLSearchParams(formData).toString();
+
+      handler(this.currentId, queryString);
+      this._resetEditFormInputs();
+      this.toggleEditForm();
     });
   }
 }
@@ -353,7 +408,7 @@ class Controller {
   }
 
   handleEditContact = (id, queryString) => {
-    this.model.getContact(id);
+    this.model.updateContact(id, queryString);
   }
 
 }
