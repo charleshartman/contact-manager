@@ -5,7 +5,6 @@
 class Model {
   constructor() {
     this.contacts = [];
-    // this.selectedContact;
   }
 
   async getAllContacts() {
@@ -63,27 +62,6 @@ class Model {
       console.error(error);
     }
   }
-
-  // async getContact(id) {
-  //   try {
-  //     const endpointUrl = 'http://localhost:3000/api/contacts/' + String(id);
-  //     const requestParams = { method: 'GET' };
-  //     const response = await fetch(endpointUrl, requestParams);
-  //     if (response.ok) {
-  //       const json = await response.json();
-  //       console.log('Contact retrieved');
-  //       this.selectedContact = json;
-  //       console.log(this.selectedContact);
-  //       return json;
-  //     } else {
-  //       console.log(response.status);
-  //       console.log('Contact not found');
-  //     }
-  //   } catch (error) {
-  //     console.log('Error, details below.');
-  //     console.error(error);
-  //   }
-  // }
 
   async updateContact(id, queryString) {
     try {
@@ -159,6 +137,7 @@ class View {
     this.inputEmail = this.createElement('input');
     this.inputEmail.name = 'email';
     this.inputEmail.type = 'text';
+    this.inputEmail.setAttribute('required', '');
 
     this.labelPhone = this.createElement('label');
     this.labelPhone.setAttribute('for', 'phone');
@@ -166,6 +145,7 @@ class View {
     this.inputPhone = this.createElement('input');
     this.inputPhone.name = 'phone_number';
     this.inputPhone.type = 'text';
+    this.inputPhone.setAttribute('required', '');
 
     this.labelTags = this.createElement('label');
     this.labelTags.setAttribute('for', 'tags');
@@ -202,6 +182,7 @@ class View {
     this.inputEmail2 = this.createElement('input');
     this.inputEmail2.name = 'email';
     this.inputEmail2.type = 'text';
+    this.inputEmail2.setAttribute('required', '');
 
     this.labelPhone2 = this.createElement('label');
     this.labelPhone2.setAttribute('for', 'phone');
@@ -209,6 +190,7 @@ class View {
     this.inputPhone2 = this.createElement('input');
     this.inputPhone2.name = 'phone_number';
     this.inputPhone2.type = 'text';
+    this.inputPhone2.setAttribute('required', '');
 
     this.labelTags2 = this.createElement('label');
     this.labelTags2.setAttribute('for', 'tags');
