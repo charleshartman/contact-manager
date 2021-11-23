@@ -242,6 +242,9 @@ class View {
 
     // property to hold id set by edit listener, needed by edit submit listener
     this.currentId;
+
+    // cache current contacts object for local search
+    this.contactsCache;
   }
 
   _initLocalListeners() {
@@ -258,6 +261,15 @@ class View {
     this.cancelButton2.addEventListener('click', event => {
       event.preventDefault();
       this.toggleEditForm();
+    });
+
+    this.search.addEventListener('keyup', event => {
+      let searchQuery = event.target.value;
+      let result = this.contactsCache.filter((contact) => {
+        return contact.full_name.toLowerCase().includes(searchQuery) ||
+               contact.tags.toLowerCase().includes(searchQuery);
+      });
+      this.displayContacts(result);
     });
   }
 
@@ -401,6 +413,7 @@ class Controller {
   }
 
   onContactListChanged = (contacts) => {
+    this.view.contactsCache = contacts;
     this.view.displayContacts(contacts);
   }
 
