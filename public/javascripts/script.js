@@ -87,6 +87,14 @@ class Model {
     }
   }
 
+  searchName(searchQuery) {
+    let result = this.contacts.filter((contact) => {
+      return contact.full_name.toLowerCase().includes(searchQuery);
+    });
+
+    this._commit(result);
+  }
+
   bindContactListChanged(callback) {
     this.onContactListChanged = callback;
   }
@@ -160,9 +168,9 @@ class View {
     this.cancelButton = this.createElement('button');
     this.cancelButton.textContent = 'Cancel';
 
-    this.addContactForm.append(this.labelName, this.inputName, this.labelEmail, this.inputEmail,
-      this.labelPhone, this.inputPhone, this.labelTags, this.inputTags,
-      this.submitButton, this.cancelButton);
+    this.addContactForm.append(this.labelName, this.inputName, this.labelEmail,
+      this.inputEmail, this.labelPhone, this.inputPhone, this.labelTags,
+      this.inputTags, this.submitButton, this.cancelButton);
 
     // edit contact form
     this.editContactForm = this.createElement('form');
@@ -205,9 +213,9 @@ class View {
     this.cancelButton2 = this.createElement('button');
     this.cancelButton2.textContent = 'Cancel';
 
-    this.editContactForm.append(this.labelName2, this.inputName2, this.labelEmail2, this.inputEmail2,
-      this.labelPhone2, this.inputPhone2, this.labelTags2, this.inputTags2,
-      this.submitButton2, this.cancelButton2);
+    this.editContactForm.append(this.labelName2, this.inputName2,
+      this.labelEmail2, this.inputEmail2, this.labelPhone2, this.inputPhone2,
+      this.labelTags2, this.inputTags2, this.submitButton2, this.cancelButton2);
 
     // append all the things
     this.app.append(this.title, this.search, this.addContactButton,
@@ -224,9 +232,6 @@ class View {
 
     // property to hold id set by edit listener, needed by edit submit listener
     this.currentId;
-
-    // cache current contacts object for local search
-    this.contactsCache;
   }
 
   _initLocalListeners() {
@@ -244,15 +249,6 @@ class View {
       event.preventDefault();
       this.toggleEditForm();
     });
-
-    this.search.addEventListener('keyup', event => {
-      let searchQuery = event.target.value;
-      let result = this.contactsCache.filter((contact) => {
-        return contact.full_name.toLowerCase().includes(searchQuery) ||
-               contact.tags.toLowerCase().includes(searchQuery);
-      });
-      this.displayContacts(result);
-    });
   }
 
   displayContacts(contacts) {
@@ -269,7 +265,6 @@ class View {
         this.contactList.appendChild(li);
       });
     } else {
-      console.log('No contacts, add some.');
       let li = this.createElement('li');
       li.textContent = 'There are currently no contacts. Add some!';
       this.contactList.appendChild(li);
@@ -321,6 +316,14 @@ class View {
     this.inputEmail2.value = '';
     this.inputPhone2.value = '';
     this.inputTags2.value = '';
+  }
+
+  bindSearchName(handler) {
+    this.search.addEventListener('keyup', event => {
+      let searchQuery = (event.target.value).toLowerCase();
+
+      handler(searchQuery);
+    });
   }
 
   bindAddContact(handler) {
@@ -381,6 +384,7 @@ class Controller {
 
     // explicit bindings
     this.model.bindContactListChanged(this.onContactListChanged);
+    this.view.bindSearchName(this.handleSearchName);
     this.view.bindAddContact(this.handleAddContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
     this.view.bindEditContact(this.handleEditContact);
@@ -395,8 +399,11 @@ class Controller {
   }
 
   onContactListChanged = (contacts) => {
-    this.view.contactsCache = contacts;
     this.view.displayContacts(contacts);
+  }
+
+  handleSearchName = (searchQuery) => {
+    this.model.searchName(searchQuery);
   }
 
   handleAddContact = (queryString) => {

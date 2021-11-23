@@ -3,7 +3,7 @@
     "full_name": "Raul Romero C.",
     "phone_number": "614-834-9763",
     "email": "raul@apple.com",
-    "tags": "vegan,canada,surfing",
+    "tags": "vegan,canada,surfing,fishing",
     "id": 1
   },
   {
@@ -31,7 +31,7 @@
     "full_name": "Charles Hartman",
     "phone_number": "314-453-8765",
     "email": "charles.hartman@mozilla.org",
-    "tags": "cycling",
+    "tags": "cycling,tacos",
     "id": 5
   }
 ]
