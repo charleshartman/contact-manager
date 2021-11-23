@@ -5,6 +5,7 @@
 class Model {
   constructor() {
     this.contacts = [];
+    this.tagCollection = [];
   }
 
   async getAllContacts() {
@@ -14,6 +15,8 @@ class Model {
       const response = await fetch(endpointUrl, requestParams);
       const json = await response.json();
       this.contacts = json;
+      this.buildTagList(this.contacts);
+      console.log(this.tagCollection);
       return json;
     } catch (error) {
       console.log('Error, details below.');
@@ -97,6 +100,19 @@ class Model {
 
   bindContactListChanged(callback) {
     this.onContactListChanged = callback;
+  }
+
+  buildTagList(contacts) {
+    let tagCollection = [];
+    contacts.forEach((contact) => {
+      contact.tags.replace(/\s/g, '').split(',').forEach((tag) => {
+        if (!tagCollection.includes(tag) && tag !== 'None') {
+          tagCollection.push(tag);
+        }
+      });
+    });
+
+    this.tagCollection = tagCollection;
   }
 
   _commit(contacts, message) {
