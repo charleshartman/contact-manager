@@ -91,16 +91,16 @@ class Model {
     let result = this.contacts.filter((contact) => {
       return contact.full_name.toLowerCase().includes(searchQuery);
     });
-
-    this._commit(result);
+    let message = `No matches found for <strong>${searchQuery}</strong>.`;
+    this._commit(result, message);
   }
 
   bindContactListChanged(callback) {
     this.onContactListChanged = callback;
   }
 
-  _commit(contacts) {
-    this.onContactListChanged(contacts);
+  _commit(contacts, message) {
+    this.onContactListChanged(contacts, message);
   }
 }
 
@@ -251,7 +251,7 @@ class View {
     });
   }
 
-  displayContacts(contacts) {
+  displayContacts(contacts, message = 'There are no contacts. Add some!') {
     // Delete all nodes
     while (this.contactList.firstChild) {
       this.contactList.removeChild(this.contactList.firstChild);
@@ -266,7 +266,7 @@ class View {
       });
     } else {
       let li = this.createElement('li');
-      li.textContent = 'There are currently no contacts. Add some!';
+      li.innerHTML = message;
       this.contactList.appendChild(li);
     }
   }
@@ -398,8 +398,8 @@ class Controller {
     this.onContactListChanged(this.model.contacts);
   }
 
-  onContactListChanged = (contacts) => {
-    this.view.displayContacts(contacts);
+  onContactListChanged = (contacts, message) => {
+    this.view.displayContacts(contacts, message);
   }
 
   handleSearchName = (searchQuery) => {
