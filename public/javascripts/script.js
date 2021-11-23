@@ -141,9 +141,9 @@ class View {
     // display entire list or filtered list
     this.contactList = this.createElement('ul', 'contactList');
 
-    // add or edit form
-    this.form = this.createElement('form', 'createEditForm');
-    this.form.classList.add('hide');
+    // add contact form
+    this.addContactForm = this.createElement('form');
+    this.addContactForm.classList.add('hide');
 
     this.labelName = this.createElement('label');
     this.labelName.setAttribute('for', 'name');
@@ -151,6 +151,7 @@ class View {
     this.inputName = this.createElement('input');
     this.inputName.name = 'full_name';
     this.inputName.type = 'text';
+    this.inputName.setAttribute('required', '');
 
     this.labelEmail = this.createElement('label');
     this.labelEmail.setAttribute('for', 'email');
@@ -179,12 +180,17 @@ class View {
     this.cancelButton = this.createElement('button');
     this.cancelButton.textContent = 'Cancel';
 
-    this.form.append(this.labelName, this.inputName, this.labelEmail, this.inputEmail,
+    this.addContactForm.append(this.labelName, this.inputName, this.labelEmail, this.inputEmail,
       this.labelPhone, this.inputPhone, this.labelTags, this.inputTags,
       this.submitButton, this.cancelButton);
 
+    this.editContactForm = this.addContactForm.cloneNode(true);
+
     this.app.append(this.title, this.search, this.upperAddContactButton,
-      this.contactList, this.form);
+      this.contactList, this.addContactForm, this.editContactForm);
+
+    this.addContactForm.id = 'addForm';
+    this.editContactForm.id = 'editForm';
 
     // Add event listeners
     document.addEventListener('DOMContentLoaded', () => {
@@ -228,7 +234,13 @@ class View {
 
   // Toggle form and contact visibility
   toggleContactsForm() {
-    this.form.classList.toggle('hide');
+    this.addContactForm.classList.toggle('hide');
+    this.contactList.classList.toggle('hide');
+  }
+
+  // Toggle form and contact visibility
+  toggleEditForm() {
+    this.editContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
   }
 
@@ -249,21 +261,28 @@ class View {
     return element;
   }
 
-  _resetFormInputs() {
+  _resetAddFormInputs() {
     this.inputName.value = '';
     this.inputEmail.value = '';
     this.inputPhone.value = '';
     this.inputTags.value = '';
   }
 
+  // _resetEditFormInputs() {
+  //   this.inputName.value = '';
+  //   this.inputEmail.value = '';
+  //   this.inputPhone.value = '';
+  //   this.inputTags.value = '';
+  // }
+
   bindAddContact(handler) {
-    this.form.addEventListener('submit', event => {
+    this.addContactForm.addEventListener('submit', event => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const queryString = new URLSearchParams(formData).toString();
 
       handler(queryString);
-      this._resetFormInputs();
+      this._resetAddFormInputs();
       this.toggleContactsForm();
     });
   }
@@ -286,13 +305,16 @@ class View {
       if (event.target.className === 'edit') {
         const id = parseInt(event.target.parentElement.id, 10);
 
-        // this.form.classList.add('editMode');
-        // this.populateForm(id);
-        // this.toggleContactsForm();
+        const existingName = event.target.parentElement.querySelector('h3');
+        const existingContent = event.target.parentElement.querySelectorAll('dd');
+        console.log(existingContent[0].innerText);
+        console.log(existingContent[1].innerText);
+        console.log(existingContent[2].innerText);
+        this.toggleEditForm();
 
-        console.log(event.target.parentElement);
+        // console.log(event.target.parentElement.querySelectorAll('dd'));
 
-        handler(id);
+        handler(id, queryString);
       }
     });
   }
@@ -330,7 +352,7 @@ class Controller {
     this.model.deleteContact(id);
   }
 
-  handleEditContact = (id) => {
+  handleEditContact = (id, queryString) => {
     this.model.getContact(id);
   }
 

@@ -33,5 +33,12 @@
     "email": "tim@apple.com",
     "tags": "football,danishes",
     "id": 7
+  },
+  {
+    "full_name": "Jim Beam",
+    "phone_number": "503-493-0924",
+    "email": "jim@beam.com",
+    "tags": "drinking",
+    "id": 8
   }
 ]
