@@ -2,14 +2,14 @@
   {
     "full_name": "Raul Romero C.",
     "phone_number": "614-834-9763",
-    "email": "raul@apple.com",
-    "tags": "vegan",
+    "email": "raul@mozilla.com",
+    "tags": "vegan,dogs",
     "id": 1
   },
   {
     "full_name": "Sophie McGarity",
     "phone_number": "206-309-3222",
-    "email": "sophie@petco.com",
+    "email": "sophie@twodogs.org",
     "tags": "dogs,running",
     "id": 2
   },
@@ -24,14 +24,21 @@
     "full_name": "Mia Jimenez",
     "phone_number": "403-532-0088",
     "email": "mia@duckduckgo.com",
-    "tags": "mindfulness,algorithms",
+    "tags": "mindfulness,algorithms,dogs",
     "id": 4
   },
   {
     "full_name": "Charles Hartman",
     "phone_number": "314-453-8765",
-    "email": "charles.hartman@mozilla.org",
-    "tags": "cycling,tacos",
+    "email": "hartman@apple.com",
+    "tags": "cycling,tacos,dogs",
     "id": 5
+  },
+  {
+    "full_name": "Chuck Norris",
+    "phone_number": "302-935-1286",
+    "email": "chuck@bakedbeans.com",
+    "tags": "judo",
+    "id": 6
   }
 ]

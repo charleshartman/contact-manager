@@ -98,6 +98,27 @@ class Model {
     this._commit(result, message);
   }
 
+  searchTags(tagsArray) {
+    if (tagsArray.length === 0) {
+      this._commit(this.contacts);
+    } else {
+      let result = [];
+      let noDuplicates = [];
+      let message = 'No matches for selected tag(s).';
+      this.contacts.forEach(contact => {
+        tagsArray.forEach(tag => {
+          if (contact.tags.includes(tag) &&
+            !(noDuplicates.includes(contact.id))) {
+            result.push(contact);
+            noDuplicates.push(contact.id);
+          }
+        });
+      });
+
+      this._commit(result, message);
+    }
+  }
+
   bindContactListChanged(callback) {
     this.onContactListChanged = callback;
   }
@@ -139,7 +160,7 @@ class View {
     // one field to search full name OR tag name
     this.search = this.createElement('input', 'search');
     this.search.type = 'text';
-    this.search.placeholder = 'Search by name or tag';
+    this.search.placeholder = 'Search by name';
 
     // add separate div for tag search functionality
     this.tagSearch = this.createElement('div', 'tagSearch');
@@ -258,6 +279,9 @@ class View {
 
     // property to hold id set by edit listener, needed by edit submit listener
     this.currentId;
+
+    // add to constructor
+    this.selectedTags = [];
   }
 
   _initLocalListeners() {
@@ -375,6 +399,24 @@ class View {
     });
   }
 
+  bindSearchTags(handler) {
+    this.tagList.addEventListener('click', event => {
+      let target = event.target;
+      if (target.classList.contains('tagSet')) {
+        target.classList.remove('tagSet');
+        target.classList.add('tagUnset');
+        let location = this.selectedTags.indexOf(target.id);
+        this.selectedTags.splice(location, 1);
+        handler(this.selectedTags);
+      } else {
+        target.classList.remove('tagUnset');
+        target.classList.add('tagSet');
+        this.selectedTags.push(target.id);
+        handler(this.selectedTags);
+      }
+    });
+  }
+
   bindAddContact(handler) {
     this.addContactForm.addEventListener('submit', event => {
       event.preventDefault();
@@ -435,6 +477,7 @@ class Controller {
     this.model.bindContactListChanged(this.onContactListChanged);
     this.model.bindTagListChanged(this.onTagListChanged);
     this.view.bindSearchName(this.handleSearchName);
+    this.view.bindSearchTags(this.handleSearchTags);
     this.view.bindAddContact(this.handleAddContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
     this.view.bindEditContact(this.handleEditContact);
@@ -458,6 +501,10 @@ class Controller {
 
   handleSearchName = (searchQuery) => {
     this.model.searchName(searchQuery);
+  }
+
+  handleSearchTags = (tagsArray) => {
+    this.model.searchTags(tagsArray);
   }
 
   handleAddContact = (queryString) => {

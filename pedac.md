@@ -20,7 +20,7 @@
       let target = event.target;
       if (target.classList.contains('tagSet')) {
         target.classList.remove('tagSet');
-        target.classList.add('tagUnset')
+        target.classList.add('tagUnset');
         let location = this.selectedTags.indexOf(target.id);
         this.selectedTags.splice(location, 1);
         handler(this.selectedTags);
@@ -35,19 +35,37 @@
 
   // Model
   searchTags(tagsArray) {
-    let result = {};
-    let message = 'No matches for selected tag(s).';
-    this.contacts.forEach(contact => {
-      tagsArray.forEach(tag => {
-        if (contact.tags.includes(tag)) {
-          result.push(contact);
-          return;
-        }
+    if (tagsArray.length === 0) {
+      this._commit(this.contacts);
+    } else {
+      let result = [];
+      let noDuplicates = [];
+      let message = 'No matches for selected tag(s).';
+      this.contacts.forEach(contact => {
+        tagsArray.forEach(tag => {
+          if (contact.tags.includes(tag) &&
+            !(noDuplicates.includes(contact.id))) {
+            result.push(contact);
+            noDuplicates.push(contact.id);
+          }
+        });
       });
-    });
-    
-    this.commit(result, message);
+
+      this._commit(result, message);
+    }
   }
+
+  // Controller
+  
+  // add to constructor
+  this.view.bindSearchTags(this.handleSearchTags);
+
+  // add to instance methods
+  handleSearchTags = (tagsArray) => {
+    this.model.searchTags(tagsArray);
+  }
+
+  ```
 
 
   
