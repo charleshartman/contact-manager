@@ -119,3 +119,7 @@ h3 {
 .hide {
   display: none;
 }
+
+.tagSet {
+  background-color: darkgray;
+}

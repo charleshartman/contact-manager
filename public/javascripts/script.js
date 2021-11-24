@@ -91,7 +91,7 @@ class Model {
   }
 
   searchName(searchQuery) {
-    let result = this.contacts.filter((contact) => {
+    let result = this.contacts.filter(contact => {
       return contact.full_name.toLowerCase().includes(searchQuery);
     });
     let message = `No matches found for <strong>${searchQuery}</strong>.`;
@@ -108,7 +108,7 @@ class Model {
 
   buildTagList(contacts) {
     let tagCollection = [];
-    contacts.forEach((contact) => {
+    contacts.forEach(contact => {
       contact.tags.replace(/\s/g, '').split(',').forEach((tag) => {
         if (!tagCollection.includes(tag) && tag !== 'None') {
           tagCollection.push(tag);
