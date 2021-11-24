@@ -3,21 +3,21 @@
     "full_name": "Raul Romero C.",
     "phone_number": "614-834-9763",
     "email": "raul@apple.com",
-    "tags": "vegan,canada,surfing,fishing",
+    "tags": "vegan",
     "id": 1
   },
   {
     "full_name": "Sophie McGarity",
     "phone_number": "206-309-3222",
     "email": "sophie@petco.com",
-    "tags": "dogs,softwareEngineering, running, rain",
+    "tags": "dogs,running",
     "id": 2
   },
   {
     "full_name": "Tim Cook",
     "phone_number": "415-555-AAPL",
     "email": "tim@apple.com",
-    "tags": "money,power,shortHair",
+    "tags": "power",
     "id": 3
   },
   {

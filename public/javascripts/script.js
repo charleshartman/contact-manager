@@ -102,6 +102,10 @@ class Model {
     this.onContactListChanged = callback;
   }
 
+  bindTagListChanged(callback) {
+    this.onTagListChanged = callback;
+  }
+
   buildTagList(contacts) {
     let tagCollection = [];
     contacts.forEach((contact) => {
@@ -113,6 +117,7 @@ class Model {
     });
 
     this.tagCollection = tagCollection;
+    this.onTagListChanged(this.tagCollection);
   }
 
   _commit(contacts, message) {
@@ -135,6 +140,11 @@ class View {
     this.search = this.createElement('input', 'search');
     this.search.type = 'text';
     this.search.placeholder = 'Search by name or tag';
+
+    // add separate div for tag search functionality
+    this.tagSearch = this.createElement('div', 'tagSearch');
+    this.tagList = this.createElement('ul', 'tagList');
+    this.tagSearch.append(this.tagList);
 
     // add contact button, will show/hide contact form
     this.addContactButton = this.createElement('button');
@@ -234,7 +244,7 @@ class View {
       this.labelTags2, this.inputTags2, this.submitButton2, this.cancelButton2);
 
     // append all the things
-    this.app.append(this.title, this.search, this.addContactButton,
+    this.app.append(this.title, this.search, this.tagSearch, this.addContactButton,
       this.contactList, this.addContactForm, this.editContactForm);
 
     this.addContactForm.id = 'addForm';
@@ -287,11 +297,33 @@ class View {
     }
   }
 
+  displayTags(tags) {
+    // Delete all nodes
+    while (this.tagList.firstChild) {
+      this.tagList.removeChild(this.tagList.firstChild);
+    }
+
+    // Display current list of tags OR display 'no tags' message
+    if (tags.length > 0) {
+      tags.forEach(tag => {
+        let li = this.createElement('li');
+        li.id = tag;
+        li.textContent = `#${tag}`;
+        this.tagList.appendChild(li);
+      });
+    } else {
+      let li = this.createElement('li');
+      li.textContent = 'There are currently no contacts with tags.';
+      this.tagList.appendChild(li);
+    }
+  }
+
   // Toggle form and contact visibility
   toggleAddForm() {
     this.addContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
     this.search.classList.toggle('hide');
+    this.tagList.classList.toggle('hide');
     this.addContactButton.classList.toggle('hide');
   }
 
@@ -300,6 +332,7 @@ class View {
     this.editContactForm.classList.toggle('hide');
     this.contactList.classList.toggle('hide');
     this.search.classList.toggle('hide');
+    this.tagList.classList.toggle('hide');
     this.addContactButton.classList.toggle('hide');
   }
 
@@ -400,6 +433,7 @@ class Controller {
 
     // explicit bindings
     this.model.bindContactListChanged(this.onContactListChanged);
+    this.model.bindTagListChanged(this.onTagListChanged);
     this.view.bindSearchName(this.handleSearchName);
     this.view.bindAddContact(this.handleAddContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
@@ -416,6 +450,10 @@ class Controller {
 
   onContactListChanged = (contacts, message) => {
     this.view.displayContacts(contacts, message);
+  }
+
+  onTagListChanged = (tags) => {
+    this.view.displayTags(tags);
   }
 
   handleSearchName = (searchQuery) => {
